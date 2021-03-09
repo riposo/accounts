@@ -16,7 +16,7 @@ func Plugin(rts *api.Routes) (plugin.Plugin, error) {
 		"accounts",
 		map[string]interface{}{
 			"description": "Manage user accounts.",
-			"url":         "https://github.com/riposo/plugins/tree/main/accounts",
+			"url":         "https://github.com/riposo/accounts",
 		},
 		nil,
 	), nil
