@@ -1,6 +1,6 @@
 module github.com/riposo/accounts
 
-go 1.14
+go 1.15
 
 replace github.com/riposo/riposo => ../riposo
 
