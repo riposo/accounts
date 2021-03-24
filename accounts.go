@@ -1,4 +1,4 @@
-package main
+package accounts
 
 import (
 	"github.com/riposo/accounts/internal"
@@ -6,20 +6,17 @@ import (
 	"github.com/riposo/riposo/pkg/plugin"
 )
 
-var _ plugin.Factory = Plugin
-
-// Plugin export definition.
-func Plugin(rts *api.Routes) (plugin.Plugin, error) {
-	rts.Resource("/accounts", internal.Model())
-
-	return plugin.New(
+func init() {
+	plugin.Register(plugin.New(
 		"accounts",
 		map[string]interface{}{
 			"description": "Manage user accounts.",
 			"url":         "https://github.com/riposo/accounts",
 		},
+		func(rts *api.Routes) error {
+			rts.Resource("/accounts", internal.Model())
+			return nil
+		},
 		nil,
-	), nil
+	))
 }
-
-func main() {}
