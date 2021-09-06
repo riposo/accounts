@@ -3,8 +3,8 @@ package internal_test
 import (
 	"testing"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	. "github.com/bsm/ginkgo"
+	. "github.com/bsm/gomega"
 	"github.com/riposo/accounts/internal"
 	"github.com/riposo/riposo/pkg/api"
 	"github.com/riposo/riposo/pkg/conn/storage"
@@ -18,7 +18,7 @@ var _ = Describe("Account Model", func() {
 
 	BeforeEach(func() {
 		txn = mock.Txn()
-		subject = internal.Model()
+		subject = internal.Model{}
 	})
 
 	AfterEach(func() {

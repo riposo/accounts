@@ -7,15 +7,13 @@ import (
 	"github.com/riposo/riposo/pkg/schema"
 )
 
-type account struct{ api.Model }
-
-// Model inits a new model
-func Model() api.Model {
-	return &account{Model: api.StdModel()}
+// Model implements the group model.
+type Model struct {
+	api.DefaultModel
 }
 
 // Create overrides.
-func (m *account) Create(txn *api.Txn, path riposo.Path, payload *schema.Resource) error {
+func (m Model) Create(txn *api.Txn, path riposo.Path, payload *schema.Resource) error {
 	// require ID to be explicitly provided
 	if payload.Data.ID == "" {
 		return schema.InvalidBody("data.id", "Required")
@@ -33,11 +31,11 @@ func (m *account) Create(txn *api.Txn, path riposo.Path, payload *schema.Resourc
 	updatePermissions(txn, payload)
 
 	// perform action
-	return m.Model.Create(txn, path, payload)
+	return m.DefaultModel.Create(txn, path, payload)
 }
 
 // Update overrides.
-func (m *account) Update(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, payload *schema.Resource) error {
+func (m Model) Update(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, payload *schema.Resource) error {
 	// process request
 	if err := process(txn, payload, true); err != nil {
 		return err
@@ -47,11 +45,11 @@ func (m *account) Update(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle
 	updatePermissions(txn, payload)
 
 	// perform action
-	return m.Model.Update(txn, path, hs, payload)
+	return m.DefaultModel.Update(txn, path, hs, payload)
 }
 
 // Patch overrides.
-func (m *account) Patch(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, payload *schema.Resource) error {
+func (m Model) Patch(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, payload *schema.Resource) error {
 	// process request
 	if err := process(txn, payload, false); err != nil {
 		return err
@@ -61,7 +59,7 @@ func (m *account) Patch(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle,
 	updatePermissions(txn, payload)
 
 	// perform action
-	return m.Model.Patch(txn, path, hs, payload)
+	return m.DefaultModel.Patch(txn, path, hs, payload)
 }
 
 func process(txn *api.Txn, payload *schema.Resource, mandatory bool) error {
