@@ -14,7 +14,7 @@ func init() {
 			"url":         "https://github.com/riposo/accounts",
 		},
 		func(rts *api.Routes) error {
-			rts.Resource("/accounts", internal.Model())
+			rts.Resource("/accounts", internal.Model{})
 			return nil
 		},
 		nil,
