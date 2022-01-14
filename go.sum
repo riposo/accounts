@@ -23,8 +23,8 @@ github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/lib/pq v1.10.4/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/riposo/riposo v0.1.1-0.20220114125510-549af920b92e h1:Q0H/WmAbkkoSDHljMjU4hVCLdbslgZ4SFTPItcUfRNA=
-github.com/riposo/riposo v0.1.1-0.20220114125510-549af920b92e/go.mod h1:4gpLnf8GSYHjDbhC7n7lTKfP+WrcJnhfVIa7o02oGEQ=
+github.com/riposo/riposo v0.1.1-0.20220114131000-b14a67545021 h1:nhFUHgmrJmvoYdi1Z8D8Zwl2EgNyzf7iCnzXy9qnK68=
+github.com/riposo/riposo v0.1.1-0.20220114131000-b14a67545021/go.mod h1:4gpLnf8GSYHjDbhC7n7lTKfP+WrcJnhfVIa7o02oGEQ=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5CcY=
