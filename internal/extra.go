@@ -27,7 +27,7 @@ func (p *extra) GetPassword() string {
 	return ""
 }
 
-func (p *extra) hashPassword(hlp *riposo.Helpers) error {
+func (p *extra) hashPassword(hlp riposo.Helpers) error {
 	pass := p.GetPassword()
 	if pass == "" {
 		return schema.InvalidBody("data.password", "Required")
