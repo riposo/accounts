@@ -3,9 +3,9 @@ module github.com/riposo/accounts
 go 1.17
 
 require (
-	github.com/bsm/ginkgo v1.16.5
+	github.com/bsm/ginkgo/v2 v2.0.0
 	github.com/bsm/gomega v1.17.0
-	github.com/riposo/riposo v0.1.1-0.20220114131000-b14a67545021
+	github.com/riposo/riposo v0.1.1-0.20220124102702-974f9081376b
 )
 
 require (

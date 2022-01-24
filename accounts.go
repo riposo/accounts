@@ -1,6 +1,8 @@
 package accounts
 
 import (
+	"context"
+
 	"github.com/riposo/accounts/internal"
 	"github.com/riposo/riposo/pkg/api"
 	"github.com/riposo/riposo/pkg/plugin"
@@ -14,7 +16,7 @@ func init() {
 			"description": "Manage user accounts.",
 			"url":         "https://github.com/riposo/accounts",
 		},
-		func(rts *api.Routes, _ riposo.Helpers) error {
+		func(_ context.Context, rts *api.Routes, _ riposo.Helpers) error {
 			rts.Resource("/accounts", internal.Model{})
 			return nil
 		},
