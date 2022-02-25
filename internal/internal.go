@@ -35,7 +35,7 @@ func (m Model) Create(txn *api.Txn, path riposo.Path, payload *schema.Resource) 
 }
 
 // Update overrides.
-func (m Model) Update(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, payload *schema.Resource) error {
+func (m Model) Update(txn *api.Txn, hs storage.UpdateHandle, payload *schema.Resource) error {
 	// process request
 	if err := process(txn, payload, true); err != nil {
 		return err
@@ -45,11 +45,11 @@ func (m Model) Update(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, p
 	updatePermissions(txn, payload)
 
 	// perform action
-	return m.DefaultModel.Update(txn, path, hs, payload)
+	return m.DefaultModel.Update(txn, hs, payload)
 }
 
 // Patch overrides.
-func (m Model) Patch(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, payload *schema.Resource) error {
+func (m Model) Patch(txn *api.Txn, hs storage.UpdateHandle, payload *schema.Resource) error {
 	// process request
 	if err := process(txn, payload, false); err != nil {
 		return err
@@ -59,7 +59,7 @@ func (m Model) Patch(txn *api.Txn, path riposo.Path, hs storage.UpdateHandle, pa
 	updatePermissions(txn, payload)
 
 	// perform action
-	return m.DefaultModel.Patch(txn, path, hs, payload)
+	return m.DefaultModel.Patch(txn, hs, payload)
 }
 
 func process(txn *api.Txn, payload *schema.Resource, mandatory bool) error {

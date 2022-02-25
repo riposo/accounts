@@ -65,20 +65,20 @@ var _ = Describe("Account Model", func() {
 		})
 
 		It("should validate", func() {
-			Expect(subject.Update(txn, "/accounts/alice", hs, &schema.Resource{
+			Expect(subject.Update(txn, hs, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{}`)},
 			})).To(MatchError(`data.password in body: Required`))
 		})
 
 		It("should hash password", func() {
-			Expect(subject.Update(txn, "/accounts/alice", hs, &schema.Resource{
+			Expect(subject.Update(txn, hs, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 			})).To(Succeed())
 			Expect(hs.Object().Extra).To(MatchJSON(`{"password":"$argon2id$v=19$m=32,t=1,p=1$Iw$Ef1fxv/3Imo"}`))
 		})
 
 		It("should retain account as writer", func() {
-			Expect(subject.Update(txn, "/accounts/alice", hs, &schema.Resource{
+			Expect(subject.Update(txn, hs, &schema.Resource{
 				Data:        &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 				Permissions: schema.PermissionSet{"read": {"account:bob"}},
 			})).To(Succeed())
@@ -103,21 +103,21 @@ var _ = Describe("Account Model", func() {
 
 		It("should not validate", func() {
 			orig := string(hs.Object().Extra)
-			Expect(subject.Patch(txn, "/accounts/alice", hs, &schema.Resource{
+			Expect(subject.Patch(txn, hs, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{}`)},
 			})).To(Succeed())
 			Expect(hs.Object().Extra).To(MatchJSON(orig))
 		})
 
 		It("should hash password", func() {
-			Expect(subject.Patch(txn, "/accounts/alice", hs, &schema.Resource{
+			Expect(subject.Patch(txn, hs, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 			})).To(Succeed())
 			Expect(hs.Object().Extra).To(MatchJSON(`{"password":"$argon2id$v=19$m=32,t=1,p=1$Iw$Ef1fxv/3Imo"}`))
 		})
 
 		It("should retain account as writer", func() {
-			Expect(subject.Patch(txn, "/accounts/alice", hs, &schema.Resource{
+			Expect(subject.Patch(txn, hs, &schema.Resource{
 				Data:        &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 				Permissions: schema.PermissionSet{"read": {"account:bob"}},
 			})).To(Succeed())
