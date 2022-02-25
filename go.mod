@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/bsm/ginkgo/v2 v2.0.0
 	github.com/bsm/gomega v1.17.0
-	github.com/riposo/riposo v0.1.1-0.20220218125627-c6c027d27583
+	github.com/riposo/riposo v0.1.1-0.20220225150655-ea0add03b361
 )
 
 require (
