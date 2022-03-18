@@ -28,7 +28,7 @@ func (m Model) Create(txn *api.Txn, path riposo.Path, payload *schema.Resource) 
 	if payload.Permissions == nil {
 		payload.Permissions = make(schema.PermissionSet, 1)
 	}
-	updatePermissions(txn, payload)
+	updatePermissions(payload)
 
 	// perform action
 	return m.DefaultModel.Create(txn, path, payload)
@@ -42,7 +42,7 @@ func (m Model) Update(txn *api.Txn, hs storage.UpdateHandle, payload *schema.Res
 	}
 
 	// include the account itself as a writer
-	updatePermissions(txn, payload)
+	updatePermissions(payload)
 
 	// perform action
 	return m.DefaultModel.Update(txn, hs, payload)
@@ -56,7 +56,7 @@ func (m Model) Patch(txn *api.Txn, hs storage.UpdateHandle, payload *schema.Reso
 	}
 
 	// include the account itself as a writer
-	updatePermissions(txn, payload)
+	updatePermissions(payload)
 
 	// perform action
 	return m.DefaultModel.Patch(txn, hs, payload)
@@ -82,7 +82,7 @@ func process(txn *api.Txn, payload *schema.Resource, mandatory bool) error {
 	return nil
 }
 
-func updatePermissions(txn *api.Txn, payload *schema.Resource) {
+func updatePermissions(payload *schema.Resource) {
 	if payload.Permissions != nil {
 		principal := "account:" + payload.Data.ID
 		payload.Permissions.Add("write", principal)
