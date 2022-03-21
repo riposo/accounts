@@ -7,7 +7,6 @@ import (
 	. "github.com/bsm/gomega"
 	"github.com/riposo/accounts/internal"
 	"github.com/riposo/riposo/pkg/api"
-	"github.com/riposo/riposo/pkg/conn/storage"
 	"github.com/riposo/riposo/pkg/mock"
 	"github.com/riposo/riposo/pkg/schema"
 )
@@ -26,7 +25,7 @@ var _ = Describe("Account Model", func() {
 	})
 
 	Describe("Create", func() {
-		It("should validate", func() {
+		It("validates", func() {
 			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{
 				Data: &schema.Object{Extra: []byte(`{}`)},
 			})).To(MatchError(`data.id in body: Required`))
@@ -36,13 +35,13 @@ var _ = Describe("Account Model", func() {
 			})).To(MatchError(`data.password in body: Required`))
 		})
 
-		It("should hash password", func() {
+		It("hashes password", func() {
 			obj := &schema.Object{ID: "alice", Extra: []byte(`{"password":"s3cret"}`)}
 			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{Data: obj})).To(Succeed())
 			Expect(obj.Extra).To(MatchJSON(`{"password": "$argon2id$v=19$m=32,t=1,p=1$Iw$Lwbwp6a14wc"}`))
 		})
 
-		It("should make the account a writer", func() {
+		It("makes the account a writer", func() {
 			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"s3cret"}`)},
 			})).To(Succeed())
@@ -53,32 +52,33 @@ var _ = Describe("Account Model", func() {
 	})
 
 	Describe("Update", func() {
-		var hs storage.UpdateHandle
+		var obj *schema.Object
 
 		BeforeEach(func() {
-			obj := &schema.Object{ID: "alice", Extra: []byte(`{"password":"s3cret"}`)}
-			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{Data: obj})).To(Succeed())
+			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{
+				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"s3cret"}`)},
+			})).To(Succeed())
 
 			var err error
-			hs, err = txn.Store.GetForUpdate("/accounts/alice")
+			obj, err = txn.Store.GetForUpdate("/accounts/alice")
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("should validate", func() {
-			Expect(subject.Update(txn, hs, &schema.Resource{
+		It("validates", func() {
+			Expect(subject.Update(txn, "/accounts/alice", obj, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{}`)},
 			})).To(MatchError(`data.password in body: Required`))
 		})
 
-		It("should hash password", func() {
-			Expect(subject.Update(txn, hs, &schema.Resource{
+		It("hashes password", func() {
+			Expect(subject.Update(txn, "/accounts/alice", obj, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 			})).To(Succeed())
-			Expect(hs.Object().Extra).To(MatchJSON(`{"password":"$argon2id$v=19$m=32,t=1,p=1$Iw$Ef1fxv/3Imo"}`))
+			Expect(obj.Extra).To(MatchJSON(`{"password":"$argon2id$v=19$m=32,t=1,p=1$Iw$Ef1fxv/3Imo"}`))
 		})
 
-		It("should retain account as writer", func() {
-			Expect(subject.Update(txn, hs, &schema.Resource{
+		It("retains account as writer", func() {
+			Expect(subject.Update(txn, "/accounts/alice", obj, &schema.Resource{
 				Data:        &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 				Permissions: schema.PermissionSet{"read": {"account:bob"}},
 			})).To(Succeed())
@@ -90,34 +90,35 @@ var _ = Describe("Account Model", func() {
 	})
 
 	Describe("Patch", func() {
-		var hs storage.UpdateHandle
+		var obj *schema.Object
 
 		BeforeEach(func() {
-			obj := &schema.Object{ID: "alice", Extra: []byte(`{"password":"s3cret"}`)}
-			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{Data: obj})).To(Succeed())
+			Expect(subject.Create(txn, "/accounts/*", &schema.Resource{
+				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"s3cret"}`)},
+			})).To(Succeed())
 
 			var err error
-			hs, err = txn.Store.GetForUpdate("/accounts/alice")
+			obj, err = txn.Store.GetForUpdate("/accounts/alice")
 			Expect(err).NotTo(HaveOccurred())
 		})
 
-		It("should not validate", func() {
-			orig := string(hs.Object().Extra)
-			Expect(subject.Patch(txn, hs, &schema.Resource{
+		It("does not validate", func() {
+			orig := string(obj.Extra)
+			Expect(subject.Patch(txn, "/accounts/alice", obj, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{}`)},
 			})).To(Succeed())
-			Expect(hs.Object().Extra).To(MatchJSON(orig))
+			Expect(obj.Extra).To(MatchJSON(orig))
 		})
 
-		It("should hash password", func() {
-			Expect(subject.Patch(txn, hs, &schema.Resource{
+		It("hashes password", func() {
+			Expect(subject.Patch(txn, "/accounts/alice", obj, &schema.Resource{
 				Data: &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 			})).To(Succeed())
-			Expect(hs.Object().Extra).To(MatchJSON(`{"password":"$argon2id$v=19$m=32,t=1,p=1$Iw$Ef1fxv/3Imo"}`))
+			Expect(obj.Extra).To(MatchJSON(`{"password":"$argon2id$v=19$m=32,t=1,p=1$Iw$Ef1fxv/3Imo"}`))
 		})
 
-		It("should retain account as writer", func() {
-			Expect(subject.Patch(txn, hs, &schema.Resource{
+		It("retains account as writer", func() {
+			Expect(subject.Patch(txn, "/accounts/alice", obj, &schema.Resource{
 				Data:        &schema.Object{ID: "alice", Extra: []byte(`{"password":"upd@ted"}`)},
 				Permissions: schema.PermissionSet{"read": {"account:bob"}},
 			})).To(Succeed())
