@@ -60,7 +60,7 @@ var _ = Describe("Account Model", func() {
 			})).To(Succeed())
 
 			var err error
-			obj, err = txn.Store.GetForUpdate("/accounts/alice")
+			obj, err = txn.Store.Get("/accounts/alice", true)
 			Expect(err).NotTo(HaveOccurred())
 		})
 
@@ -98,7 +98,7 @@ var _ = Describe("Account Model", func() {
 			})).To(Succeed())
 
 			var err error
-			obj, err = txn.Store.GetForUpdate("/accounts/alice")
+			obj, err = txn.Store.Get("/accounts/alice", true)
 			Expect(err).NotTo(HaveOccurred())
 		})
 
